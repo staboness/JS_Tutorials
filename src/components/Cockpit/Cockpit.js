@@ -1,40 +1,41 @@
-import styled from 'styled-components';
-import React from 'react';
-import './Cockpit.css';
+import React, { useEffect } from 'react';
 
-const StyledButton = styled.button`
-      background-color: ${props => props.alt ? 'red' : 'green'};
-      color: white;
-      font: inherit;
-      border: 1px solid blue;
-      padding: 8px;
-      cursor: pointer;
+import classes from './Cockpit.css';
 
-      &:hover {
-        background-color: ${props => props.alt ? 'salmon' : 'lightgreen'};
-        color: black;
-      }
-`;
+const Cockpit = props => {
+  useEffect(() => {
+    console.log('[Cockpit.js] useEffect');
+    // Http request...
+    setTimeout(() => {
+      alert('Saved data to cloud!');
+    }, 1000);
+    return () => {
+      console.log('[Cockpit.js] cleanup work in useEffect');
+    };
+  }, []);
 
-const cockpit = (props) => {
-    let classes = [];
-    if(props.persons.length <= 2){
-      classes.push('red');
-    }
+  const assignedClasses = [];
+  let btnClass = '';
+  if (props.showPersons) {
+    btnClass = classes.Red;
+  }
 
-    if(props.persons.length <= 1){
-      classes.push('bold');
-    }
+  if (props.personsLength <= 2) {
+    assignedClasses.push(classes.red); 
+  }
+  if (props.personsLength <= 1) {
+    assignedClasses.push(classes.bold);
+  }
 
-    return (
-        <div className="Cockpit">
-            <h1>Hi, I'm a React App</h1>
-            <p className={classes.join(' ')}>This is really working!</p>
-            <StyledButton alt={props.showPersons} onClick={props.toggle}>
-            Toggle Persons
-            </StyledButton>
-        </div>
-    );
+  return (
+    <div className={classes.Cockpit}>
+      <h1>{props.title}</h1>
+      <p className={assignedClasses.join(' ')}>This is really working!</p>
+      <button className={btnClass} onClick={props.clicked}>
+        Toggle Persons
+      </button>
+    </div>
+  );
 };
 
-export default cockpit;
+export default React.memo(Cockpit);
